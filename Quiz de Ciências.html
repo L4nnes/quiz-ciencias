@@ -1,0 +1,146 @@
+
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Ciências para Feira Escolar</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f7f7f7; text-align: center; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        button { padding: 10px 20px; margin-top: 15px; cursor: pointer; background: #4CAF50; color: white; border: none; border-radius: 5px; }
+        .question { margin-top: 20px; text-align: left; }
+        label { display: block; margin-left: 0; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz de Ciências!</h1>
+        <div id="intro">
+            <label>Escolha seu ano escolar:
+                <select id="anoEscolar">
+                    <option value="1">1º Ano</option>
+                    <option value="2">2º Ano</option>
+                    <option value="3">3º Ano</option>
+                    <option value="4">4º Ano</option>
+                    <option value="5">5º Ano</option>
+                    <option value="6">6º Ano</option>
+                    <option value="7">7º Ano</option>
+                    <option value="8">8º Ano</option>
+                    <option value="9">9º Ano</option>
+                </select>
+            </label><br><br>
+            <button onclick="comecarQuiz()">Começar!</button>
+        </div>
+
+        <div id="quiz" style="display:none;"></div>
+
+        <div id="resultado" style="display:none;"></div>
+    </div>
+
+    <script>
+        const perguntas = {
+            1: [
+                {q: "Qual a cor do céu em um dia limpo?", opcoes: ["azul", "verde", "amarelo"], a: "azul", tema: "Natureza"},
+                {q: "Que animal faz 'miau'?", opcoes: ["cachorro", "gato", "pato"], a: "gato", tema: "Animais"},
+                {q: "Qual fruta é amarela e longa?", opcoes: ["maçã", "uva", "banana"], a: "banana", tema: "Frutas"},
+                {q: "Água é líquida, sólida ou gasosa?", opcoes: ["líquida", "sólida", "gasosa"], a: "líquida", tema: "Estados da Matéria"}
+            ],
+            2: [
+                {q: "Quantas patas tem uma aranha?", opcoes: ["4", "6", "8"], a: "8", tema: "Animais"},
+                {q: "Qual parte da planta fica enterrada?", opcoes: ["raiz", "folha", "flor"], a: "raiz", tema: "Plantas"},
+                {q: "O que usamos para medir o tempo?", opcoes: ["relógio", "balança", "termômetro"], a: "relógio", tema: "Instrumentos de Medição"},
+                {q: "O que precisamos para respirar?", opcoes: ["água", "ar", "terra"], a: "ar", tema: "Corpo Humano"}
+            ],
+            3: [
+                {q: "Qual é o maior planeta do Sistema Solar?", opcoes: ["Terra", "Júpiter", "Marte"], a: "Júpiter", tema: "Astronomia"},
+                {q: "O que as plantas usam para fazer seu alimento?", opcoes: ["Fotossíntese", "Digestão", "Respiração"], a: "Fotossíntese", tema: "Botânica"},
+                {q: "Qual animal é conhecido por sua tromba?", opcoes: ["Girafa", "Elefante", "Zebra"], a: "Elefante", tema: "Animais"},
+                {q: "Quantos estados físicos a água possui?", opcoes: ["Dois", "Três", "Quatro"], a: "Três", tema: "Estados da Matéria"}
+            ],
+            4: [
+                {q: "Qual é a fonte de energia natural mais importante para a Terra?", opcoes: ["Sol", "Lua", "Marte"], a: "Sol", tema: "Energia"},
+                {q: "Quantos sentidos o ser humano possui?", opcoes: ["Cinco", "Quatro", "Seis"], a: "Cinco", tema: "Corpo Humano"},
+                {q: "Como se chama a casa das abelhas?", opcoes: ["Colmeia", "Formigueiro", "Toca"], a: "Colmeia", tema: "Animais"},
+                {q: "Qual é o órgão responsável por bombear o sangue?", opcoes: ["Cérebro", "Coração", "Pulmão"], a: "Coração", tema: "Corpo Humano"}
+            ],
+			5: [
+				{q: "Qual órgão usamos para respirar?", opcoes: ["Estômago", "Pulmão", "Fígado"], a: "Pulmão", tema: "Corpo Humano"},
+				{q: "Qual planeta é conhecido como o Planeta Vermelho?", opcoes: ["Vênus", "Marte", "Saturno"], a: "Marte", tema: "Astronomia"},
+				{q: "Como se chama a transformação da água líquida em vapor?", opcoes: ["Solidificação", "Evaporação", "Condensação"], a: "Evaporação", tema: "Estados da Matéria"},
+				{q: "Que tipo de animal é um sapo?", opcoes: ["Réptil", "Mamífero", "Anfíbio"], a: "Anfíbio", tema: "Animais"}
+			],
+			6: [
+				{q: "Qual é o gás necessário para a respiração humana?", opcoes: ["Oxigênio", "Nitrogênio", "Hidrogênio"], a: "Oxigênio", tema: "Corpo Humano"},
+				{q: "Qual aparelho usamos para observar estrelas e planetas?", opcoes: ["Microscópio", "Telescópio", "Binóculo"], a: "Telescópio", tema: "Astronomia"},
+				{q: "Que órgão é responsável pela digestão?", opcoes: ["Pulmão", "Coração", "Estômago"], a: "Estômago", tema: "Corpo Humano"},
+				{q: "A água congela a quantos graus Celsius?", opcoes: ["0°C", "10°C", "-10°C"], a: "0°C", tema: "Estados da Matéria"}
+			],
+			7: [
+				{q: "Qual é o processo das plantas liberarem oxigênio?", opcoes: ["Respiração", "Fotossíntese", "Digestão"], a: "Fotossíntese", tema: "Botânica"},
+				{q: "Quantos planetas existem no nosso Sistema Solar?", opcoes: ["8", "9", "7"], a: "8", tema: "Astronomia"},
+				{q: "O que mede a velocidade do vento?", opcoes: ["Termômetro", "Anemômetro", "Barômetro"], a: "Anemômetro", tema: "Instrumentos de Medição"},
+				{q: "O sangue humano é transportado por quais vasos?", opcoes: ["Artérias e veias", "Tendões", "Músculos"], a: "Artérias e veias", tema: "Corpo Humano"}
+			],
+			8: [
+				{q: "O que são animais vertebrados?", opcoes: ["Sem ossos", "Com coluna vertebral", "Com exoesqueleto"], a: "Com coluna vertebral", tema: "Animais"},
+				{q: "Qual é o satélite natural da Terra?", opcoes: ["Sol", "Lua", "Marte"], a: "Lua", tema: "Astronomia"},
+				{q: "O que chamamos a passagem do estado sólido direto para o gasoso?", opcoes: ["Sublimação", "Condensação", "Fusão"], a: "Sublimação", tema: "Estados da Matéria"},
+				{q: "Qual o gás mais abundante no ar que respiramos?", opcoes: ["Oxigênio", "Nitrogênio", "Dióxido de Carbono"], a: "Nitrogênio", tema: "Química"}
+			],
+			9: [
+				{q: "Qual é a unidade básica da vida?", opcoes: ["Célula", "Átomo", "Molécula"], a: "Célula", tema: "Biologia"},
+				{q: "O que são planetas gasosos?", opcoes: ["Feitos de rocha", "Feitos de gases", "Feitos de gelo"], a: "Feitos de gases", tema: "Astronomia"},
+				{q: "Que energia é gerada pelo movimento da água?", opcoes: ["Eólica", "Solar", "Hidrelétrica"], a: "Hidrelétrica", tema: "Energia"},
+				{q: "Qual é a fórmula química da água?", opcoes: ["CO2", "H2O", "O2"], a: "H2O", tema: "Química"}
+			],
+        };
+
+        let anoEscolhido;
+        let respostasCorretas;
+
+        function comecarQuiz() {
+            anoEscolhido = document.getElementById('anoEscolar').value;
+            respostasCorretas = 0;
+
+            document.getElementById('intro').style.display = 'none';
+            const quizDiv = document.getElementById('quiz');
+            quizDiv.style.display = 'block';
+
+            quizDiv.innerHTML = '';
+
+            perguntas[anoEscolhido].forEach((pergunta, i) => {
+                quizDiv.innerHTML += `<div class="question">${pergunta.q}<br>`;
+                pergunta.opcoes.forEach(opcao => {
+                    quizDiv.innerHTML += `<label><input type="radio" name="resposta${i}" value="${opcao}"> ${opcao}</label>`;
+                });
+                quizDiv.innerHTML += '</div>';
+            });
+
+            quizDiv.innerHTML += '<button onclick="corrigirQuiz()">Finalizar</button>';
+        }
+
+        function corrigirQuiz() {
+            const quizDiv = document.getElementById('quiz');
+            let temasErrados = [];
+
+            perguntas[anoEscolhido].forEach((pergunta, i) => {
+                const respostas = document.getElementsByName(`resposta${i}`);
+                respostas.forEach(resposta => {
+                    if(resposta.checked && resposta.value === pergunta.a) respostasCorretas++;
+                });
+                if (!Array.from(respostas).some(r => r.checked && r.value === pergunta.a)) temasErrados.push(pergunta.tema);
+            });
+
+            let mensagem = '';
+
+            if(respostasCorretas === 4) mensagem = '🎉 Parabéns! Você acertou tudo!';
+            else if(respostasCorretas >= 2) mensagem = '🙂 Foi bom, mas podemos melhorar! Revise: ' + temasErrados.join(', ');
+            else mensagem = '😅 Não desista! Estude mais sobre: ' + temasErrados.join(', ');
+
+            document.getElementById('resultado').innerHTML = `<p>${mensagem}</p><button onclick="window.location.reload()">Finalizar</button>`;
+            quizDiv.style.display = 'none';
+            document.getElementById('resultado').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
